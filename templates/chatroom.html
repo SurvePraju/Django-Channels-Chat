@@ -1,0 +1,41 @@
+{% extends "base.html" %}
+
+{% block title %}Chatroom - {{room_name}}{% endblock title %}
+
+
+
+{% block content %}
+
+Welcome to the Chatroom
+<br>
+Chatroom id - {{room_name}}
+
+{{room_name|json_script:"room-name"}}
+
+
+<div id="user-hello">
+
+</div>
+
+
+
+<script>
+    const roomName = JSON.parse(document.getElementById("room-name").textContent);
+    
+    const chatSocket = new Websocket(
+        "ws://" +
+        window.location.host +
+        "/ws/chat/"+
+        roomName +
+        "/"
+    );
+    chatSocket.onmessage=function(e){
+        const data = JSON.parse(e.data);
+        console.log(data)
+        document.querySelector("#user-hello").innerHTML = (data.tester)
+    }
+</script>
+
+
+
+{% endblock content %}
